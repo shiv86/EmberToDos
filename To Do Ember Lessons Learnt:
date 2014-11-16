@@ -1,0 +1,40 @@
+To Do Ember Lessons Learnt:
+
+1.For EmberCli projects use http-mock todos instead of Fixtures
+	1.1 cmd: ember g http-mock todos
+		INSTALLING:
+  		create server/.jshintrc
+  		create server/index.js
+  		create server/mocks/todos.js
+  	1.2 Place the normal fixture data in res.send method
+  	1.3 stop/start ember server and ensure that you get the json back:
+
+  	curl -H "ContentType:application/json" http://localhost:4200/api/project	
+
+  	1.4 create an applicationadapter:
+  	ember g adapter applicationadapter
+
+  	1.5 specfy the namespace same as the todos mock http server:
+  	DS.RESTAdapter.extend({
+  		namespace: '/api/todos'
+	});
+
+    1.6 The route override the model hook:
+      model: function(){
+          return this.store.find('todo');
+      }
+
+2. EmberCli - Generating Controller of specific types:
+   ember g controller todo --type=object      
+   ember g --help ::https://github.com/stefanpenner/ember-cli/issues/1391
+
+3. Attributes can be bound directly to the model {{bind-attr class="isCompleted:completed"}}
+   where isCompleted is an attribute of the todo model. (It does not need to be bound to the actuall controller.)
+
+4. Persistance of the state is done at the controller level.
+
+5. If in todos.hbs or posts.hbs and iterating over the individual models.
+
+    >> {{#each todo in model itemController="todo"}} {{/each}}, will ensure that any {{action}} handle bars call the actions defined in the model's controller (todo or post) and not the ArrayController (todos or posts);
+
+    >> if we use {{#each model}} {{/each}}, the scope of any action calls will be made the the hbs's files corresponding controller. 
